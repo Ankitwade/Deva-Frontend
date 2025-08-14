@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deva - AI Voice Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div class="loader-wrapper" id="loader">
+    <div class="loader-text">Initializing Deva...</div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand-name">Deva</div>
+    <nav class="nav">
+      <a href="#">Home</a>
+      <a href="#features">Features & Commands</a>
+      <a href="#contact">Contact</a>
+      <a href="#builder">About the Builder</a>
+    </nav>
+  </header>
+
+  <!-- Chat Area -->
+  <section class="chat-section">
+    <h1>Talk to Deva</h1>
+    <button class="voice-btn" id="startVoice">🎤 Start Talking</button>
+    <div class="voice-output" id="outputText">Your commands will appear here...</div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <h2>🛠️ Features & Commands</h2>
+    <ul>
+      <li>🎵 Plays specific songs: Faded, Soul Survivor, Mockingbird, Old Town Road, Lonely, Smack That</li>
+      <li>🖥️ Opens any macOS app (say: "open app [name]")</li>
+      <li>🌐 Opens top 10 most visited Indian websites</li>
+      <li>📰 Fetches the latest news</li>
+      <li>💬 Responds like a human</li>
+      <li>⏱️ Waits 1–2 seconds before responding</li>
+    </ul>
+  </section>
+
+  <!-- About the Builder -->
+  <section class="about-builder" id="builder">
+    <h2>👨‍💻 About the Builder</h2>
+    <p>Hey! I'm <strong>Ankit Wade</strong>, the creator of Deva — a smart AI assistant tailored for university students. I love building intelligent, intuitive tools that solve real problems.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="contact">
+    <p>© 2025 Ankit Wade. All rights reserved.</p>
+    <p>📧 Email: ankit@example.com | 📞 Phone: +91-XXXXXXXXXX</p>
+    <div class="social-icons">
+      <a href="https://linkedin.com/in/your-profile" target="_blank"><i data-lucide="linkedin"></i></a>
+      <a href="https://github.com/your-username" target="_blank"><i data-lucide="github"></i></a>
+      <a href="https://twitter.com/your-handle" target="_blank"><i data-lucide="twitter"></i></a>
+      <a href="https://instagram.com/your-handle" target="_blank"><i data-lucide="instagram"></i></a>
+      <a href="https://wa.me/91XXXXXXXXXX" target="_blank"><i data-lucide="whatsapp"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    // Loader delay
+  // Wait for full load
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      document.getElementById("loader").style.opacity = "0";
+      setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+
+        // ✅ Scroll to top to avoid anchor jumping
+        window.scrollTo({ top: 0, behavior: 'instant' });
+
+      }, 1000);
+    }, 2500); // 2.5 seconds
+  });
+    // Voice Recognition
+    const startBtn = document.getElementById("startVoice");
+    const outputText = document.getElementById("outputText");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.lang = 'en-US';
+
+      let isListening = false;
+
+      startBtn.addEventListener('click', () => {
+        if (!isListening) {
+          recognition.start();
+          startBtn.textContent = "🛑 Stop Talking";
+          outputText.innerHTML = "Listening...";
+        } else {
+          recognition.stop();
+          startBtn.textContent = "🎤 Start Talking";
+        }
+        isListening = !isListening;
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[event.results.length - 1][0].transcript;
+        outputText.innerHTML += "<br>🗣️ " + transcript;
+      };
+
+      recognition.onerror = (e) => {
+        outputText.innerHTML += "<br>⚠️ Error: " + e.error;
+      };
+    } else {
+      startBtn.disabled = true;
+      outputText.innerHTML = "Speech Recognition not supported in this browser.";
+    }
+  </script>
+</body>
+</html>
